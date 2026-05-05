@@ -1,0 +1,12 @@
+# Ignorar caché de Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Ignorar configuraciones locales del editor
+.vscode/
+.idea/
+
+# Ignorar archivos del sistema operativo
+.DS_Store
+Thumbs.db

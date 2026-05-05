@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_report_terminal_transaction" model="ir.actions.report">
+        <field name="name">Recibo de Transacción</field>
+        <field name="model">terminal.transaction</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">omnichannel_sales.report_terminal_transaction_template</field>
+        <field name="report_file">omnichannel_sales.report_terminal_transaction_template</field>
+        <field name="binding_model_id" ref="model_terminal_transaction"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <template id="report_terminal_transaction_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <div class="text-center mt-4 mb-4">
+                            <h2>Recibo de Transacción Omnicanal</h2>
+                            <h4 t-field="doc.name"/>
+                        </div>
+
+                        <div class="row mt-4 mb-4">
+                            <div class="col-6">
+                                <strong>Cliente:</strong>
+                                <p t-field="doc.partner_id.name"/>
+                            </div>
+                            <div class="col-6">
+                                <strong>Fecha:</strong>
+                                <p t-field="doc.date"/>
+                            </div>
+                        </div>
+
+                        <table class="table table-sm o_main_table">
+                            <thead>
+                                <tr>
+                                    <th>ID Terminal</th>
+                                    <th>Diario Contable</th>
+                                    <th>Estado</th>
+                                    <th class="text-end">Monto Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><span t-field="doc.terminal_identifier"/></td>
+                                    <td><span t-field="doc.journal_id.name"/></td>
+                                    <td><span t-field="doc.state"/></td>
+                                    <td class="text-end">
+                                        <strong><span t-field="doc.amount" t-options='{"widget": "monetary", "display_currency": doc.journal_id.currency_id or doc.env.company.currency_id}'/></strong>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <div class="mt-5" t-if="doc.move_id">
+                            <p class="text-muted">
+                                <em>Esta transacción ha sido conciliada bajo el asiento contable: <span t-field="doc.move_id.name"/></em>
+                            </p>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>
